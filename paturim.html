@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פטורים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --grad-start: #ff0952;
+    --grad-end: #ff7a5e;
+    --page-bg: #f4f5f9;
+    --card-bg: #ffffff;
+    --text: #26262b;
+    --label: #9a9aa1;
+    --muted: #8a8a90;
+    --red: #ee1450;
+    --badge-bg: #e9e9ee;
+    --badge-text: #55555a;
+    --pill-bg: #e9e9ee;
+    --pill-text: #55555a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  [hidden] { display: none !important; }
+
+  body {
+    font-family: "Heebo", "Segoe UI", sans-serif;
+    background: #101012;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .phone {
+    width: 100%;
+    max-width: 390px;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: max(780px, calc(100vh));
+    min-height: max(780px, calc(100dvh));
+    position: relative;
+    background: var(--page-bg);
+    overflow: hidden;
+  }
+
+  .statusbar {
+    height: 7px;
+    background: #000;
+    flex-shrink: 0;
+  }
+
+  .topbar {
+    background: linear-gradient(115deg, var(--grad-start) 0%, var(--grad-end) 100%);
+    padding: 16px 18px 0;
+    flex-shrink: 0;
+  }
+
+  .topbar-row {
+    direction: ltr;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 16px;
+  }
+
+  .logo-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    line-height: 0;
+  }
+
+  .logo {
+    height: 58px;
+    width: auto;
+    display: block;
+    margin-top: 4px;
+  }
+
+  .topbar-right {
+    direction: rtl;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 6px;
+  }
+
+  .page-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .icon-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    line-height: 0;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  .icon-btn svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .back-btn svg {
+    width: 26px;
+    height: 26px;
+    stroke-width: 2.2;
+  }
+
+  .tabs {
+    direction: ltr;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 4px 0 0;
+    position: relative;
+  }
+
+  .tabs::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 12px;
+    background: var(--page-bg);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+
+  .tab {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.72);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    padding-bottom: 15px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .tab.active {
+    color: #fff;
+    font-weight: 800;
+  }
+
+  .tab.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    border-radius: 2px;
+    background: #fff;
+  }
+
+  .content {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 120px;
+  }
+
+  .view[hidden] { display: none; }
+
+  .view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(20, 20, 30, 0.04), 0 8px 20px rgba(20, 20, 30, 0.06);
+    padding: 22px 20px;
+  }
+
+  .exemption-card {
+    text-align: right;
+    cursor: pointer;
+  }
+
+  .exemption-card.static { cursor: default; }
+
+  .exemption-card + .exemption-card,
+  .exemption-card ~ .exemption-card {
+    margin-top: 16px;
+  }
+
+  #view-kodmim .exemption-card {
+    margin-bottom: 16px;
+  }
+
+  .ex-title {
+    font-size: 18.5px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .ex-sub {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .dash {
+    width: 44px;
+    height: 4px;
+    background: var(--red);
+    border-radius: 2px;
+    margin: 14px 0 16px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 8px;
+  }
+
+  .pill {
+    display: block;
+    background: var(--pill-bg);
+    color: var(--pill-text);
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    padding: 11px 10px;
+    border-radius: 10px;
+  }
+
+  .notice {
+    direction: rtl;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 0 4px;
+    margin-top: auto;
+  }
+
+  .info-circle {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid #bdbdc4;
+    color: #8a8a90;
+    font-size: 12px;
+    font-style: italic;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .notice p {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    line-height: 1.55;
+    text-align: right;
+  }
+
+  .detail-card { text-align: right; }
+
+  .detail-hr {
+    height: 1px;
+    background: #ececf1;
+    margin: 16px 0 6px;
+  }
+
+  .detail-row {
+    direction: rtl;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 0;
+  }
+
+  .d-icon {
+    flex-shrink: 0;
+    color: var(--text);
+    position: relative;
+    line-height: 0;
+  }
+
+  .d-icon svg {
+    width: 19px;
+    height: 19px;
+    stroke: var(--text);
+    stroke-width: 1.7;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .d-icon .dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+  }
+
+  .d-pair {
+    direction: rtl;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .d-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--label);
+  }
+
+  .d-value {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .fab {
+    position: absolute;
+    left: 18px;
+    bottom: 22px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+    border: none;
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(238, 20, 80, 0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fab svg {
+    width: 22px;
+    height: 22px;
+    stroke: #fff;
+    stroke-width: 2.4;
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(16, 16, 18, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    cursor: pointer;
+  }
+
+  .loading-overlay[hidden] { display: none; }
+
+  .spinner {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.25);
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>
+</head>
+<body>
+  <div class="phone" aria-label="פטורים">
+    <div class="statusbar" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="topbar-row" id="mainHeaderRow">
+        <button class="logo-btn" id="logoBtn" aria-label="תפריט ראשי">
+          <img class="logo" src="paturim-logo.png" alt="">
+        </button>
+        <div class="topbar-right">
+          <button class="icon-btn menu-btn" aria-label="תפריט">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <h1 class="page-title">פטורים</h1>
+        </div>
+      </div>
+
+      <div class="topbar-row" id="detailHeaderRow" hidden>
+        <button class="icon-btn back-btn" id="backBtn" aria-label="חזרה">
+          <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <div class="topbar-right">
+          <button class="icon-btn menu-btn" aria-label="תפריט">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <h1 class="page-title">פרטי הפטור</h1>
+        </div>
+      </div>
+
+      <nav class="tabs" id="tabsNav">
+        <button class="tab" data-tab="kodmim">פטורים קודמים</button>
+        <button class="tab active" data-tab="sheli">הפטורים שלי</button>
+      </nav>
+    </header>
+
+    <main class="content">
+      <section id="view-sheli" class="view">
+        <div class="card exemption-card" id="cardSheli" tabindex="0" role="button" aria-label="פרטי הפטור">
+          <h2 class="ex-title">אורך שיער מותר עד 5 ס"מ</h2>
+          <p class="ex-sub">אלכסנדר לוריא</p>
+          <div class="dash"></div>
+          <span class="badge" id="badgeText">התוקף יסתיים ב-</span>
+        </div>
+        <div class="notice">
+          <span class="info-circle">i</span>
+          <p>חסר לך מידע? ייתכן והמידע שחשפת לא עומד בקריטריונים להצגה. ניתן לקבל את המידע במרפאה שלך</p>
+        </div>
+      </section>
+
+      <section id="view-kodmim" class="view" hidden>
+        <div class="card exemption-card static">
+          <h2 class="ex-title">אורך שיער מותר עד 5 ס"מ</h2>
+          <p class="ex-sub">סרגיי ריס</p>
+          <div class="dash"></div>
+          <span class="pill">התוקף מ- 03.05.26 עד 31.07.26</span>
+        </div>
+        <div class="card exemption-card static">
+          <h2 class="ex-title">אורך שיער מותר עד 5 ס"מ</h2>
+          <p class="ex-sub">סרגיי ריס</p>
+          <div class="dash"></div>
+          <span class="pill">התוקף מ- 08.01.26 עד 07.04.26</span>
+        </div>
+        <div class="card exemption-card static">
+          <h2 class="ex-title">אורך שיער מותר עד 5 ס"מ</h2>
+          <p class="ex-sub">סרגיי ריס</p>
+          <div class="dash"></div>
+          <span class="pill">התוקף מ- 24.11.25 עד 23.12.25</span>
+        </div>
+        <div class="card exemption-card static">
+          <h2 class="ex-title">הימנעות מחשיפה מיוחדת לשמש</h2>
+          <p class="ex-sub">סימון צ אולייויה</p>
+          <div class="dash"></div>
+          <span class="pill">התוקף מ- 23.04.25 עד 22.05.25</span>
+        </div>
+      </section>
+
+      <section id="view-detail" class="view" hidden>
+        <div class="card detail-card">
+          <h2 class="ex-title">אורך שיער מותר עד 5 ס"מ</h2>
+          <div class="detail-hr"></div>
+          <div class="detail-row">
+            <span class="d-icon">
+              <svg viewBox="0 0 24 24"><path d="M6 3v5a3.5 3.5 0 0 0 7 0V3M6 3H4.3M13 3h1.7M9.5 11.5V14a4.7 4.7 0 0 0 9.4 0v-.8a2.6 2.6 0 1 0-2.6 2.6"/></svg>
+              <span class="dot"></span>
+            </span>
+            <span class="d-pair">
+              <span class="d-label">ניתן על ידי</span>
+              <span class="d-value">אלכסנדר לוריא</span>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="d-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            </span>
+            <span class="d-pair">
+              <span class="d-label">ניתן בתאריך</span>
+              <span class="d-value" id="givenDateValue">02.08.26</span>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="d-icon">
+              <svg viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.8-6.3"/><path d="M3.2 4.5v5h5"/><path d="M12 8.3v4l3 1.8"/></svg>
+            </span>
+            <span class="d-pair">
+              <span class="d-label">תוקף</span>
+              <span class="d-value" id="validUntilValue">15.08.26</span>
+            </span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <button class="fab" id="fabBtn" aria-label="הוספת פטור">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay" hidden aria-live="polite" aria-label="טוען">
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    (function () {
+      function pad(n) {
+        return String(n).padStart(2, "0");
+      }
+
+      function formatDate(d) {
+        return pad(d.getDate()) + "." + pad(d.getMonth() + 1) + "." + String(d.getFullYear()).slice(-2);
+      }
+
+      function addDays(date, days) {
+        var d = new Date(date);
+        d.setDate(d.getDate() + days);
+        return d;
+      }
+
+      // Friday (5) / Saturday (6) are the weekend — roll forward to the next Sunday.
+      function skipWeekend(date) {
+        var d = new Date(date);
+        while (d.getDay() === 5 || d.getDay() === 6) {
+          d.setDate(d.getDate() + 1);
+        }
+        return d;
+      }
+
+      var today = new Date();
+      var givenDate = skipWeekend(addDays(today, -42));
+      var validUntilDate = addDays(today, 58);
+      var givenDateText = formatDate(givenDate);
+      var validUntilText = formatDate(validUntilDate);
+
+      var givenDateEl = document.getElementById("givenDateValue");
+      if (givenDateEl) givenDateEl.textContent = givenDateText;
+
+      var validUntilEl = document.getElementById("validUntilValue");
+      if (validUntilEl) validUntilEl.textContent = validUntilText;
+
+      var badgeEl = document.getElementById("badgeText");
+      if (badgeEl) badgeEl.textContent = "התוקף יסתיים ב- " + validUntilText;
+
+      var overlay = document.getElementById("loadingOverlay");
+
+      function showLoading(e) {
+        if (e) e.preventDefault();
+        overlay.hidden = false;
+      }
+
+      overlay.addEventListener("click", function () {
+        overlay.hidden = true;
+      });
+
+      document.getElementById("logoBtn").addEventListener("click", showLoading);
+      document.getElementById("fabBtn").addEventListener("click", showLoading);
+      document.querySelectorAll(".menu-btn").forEach(function (btn) {
+        btn.addEventListener("click", showLoading);
+      });
+
+      var tabs = document.querySelectorAll(".tab");
+      var viewSheli = document.getElementById("view-sheli");
+      var viewKodmim = document.getElementById("view-kodmim");
+      var viewDetail = document.getElementById("view-detail");
+      var tabsNav = document.getElementById("tabsNav");
+      var mainHeaderRow = document.getElementById("mainHeaderRow");
+      var detailHeaderRow = document.getElementById("detailHeaderRow");
+      var fabBtn = document.getElementById("fabBtn");
+
+      function activateTab(name) {
+        tabs.forEach(function (t) {
+          t.classList.toggle("active", t.dataset.tab === name);
+        });
+        viewSheli.hidden = name !== "sheli";
+        viewKodmim.hidden = name !== "kodmim";
+        viewDetail.hidden = true;
+        tabsNav.hidden = false;
+        mainHeaderRow.hidden = false;
+        detailHeaderRow.hidden = true;
+        fabBtn.hidden = false;
+      }
+
+      tabs.forEach(function (t) {
+        t.addEventListener("click", function () {
+          activateTab(t.dataset.tab);
+        });
+      });
+
+      function openDetail() {
+        viewSheli.hidden = true;
+        viewKodmim.hidden = true;
+        viewDetail.hidden = false;
+        tabsNav.hidden = true;
+        mainHeaderRow.hidden = true;
+        detailHeaderRow.hidden = false;
+        fabBtn.hidden = true;
+      }
+
+      var cardSheli = document.getElementById("cardSheli");
+      cardSheli.addEventListener("click", openDetail);
+      cardSheli.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openDetail();
+        }
+      });
+
+      document.getElementById("backBtn").addEventListener("click", function () {
+        activateTab("sheli");
+      });
+    })();
+  </script>
+</body>
+</html>

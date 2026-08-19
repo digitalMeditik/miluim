@@ -378,7 +378,7 @@
         </div>
         <div class="field">
           <div class="label">תאריך תחילת תוקף</div>
-          <div class="value">01.05.2026</div>
+          <div class="value" id="field-start-date">01.05.2026</div>
         </div>
       </div>
 
@@ -400,7 +400,7 @@
         </div>
         <div class="expiry-copy">
           <span class="line">תאריך תום תוקף:</span>
-          <span class="date">21.06.2027</span>
+          <span class="date" id="field-expiry-date">21.06.2027</span>
         </div>
       </div>
 
@@ -425,6 +425,24 @@
         var d = pad(date.getDate()) + "." + pad(date.getMonth() + 1) + "." + date.getFullYear();
         var t = pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds());
         return "צבא ההגנה לישראל " + d + " - " + t;
+      }
+
+      function formatDate(date) {
+        return pad(date.getDate()) + "." + pad(date.getMonth() + 1) + "." + date.getFullYear();
+      }
+
+      function applyValidityDates() {
+        var today = new Date();
+
+        var start = new Date(today);
+        start.setDate(start.getDate() - 7);
+        var startEl = document.getElementById("field-start-date");
+        if (startEl) startEl.textContent = formatDate(start);
+
+        var expiry = new Date(today);
+        expiry.setDate(expiry.getDate() + 8);
+        var expiryEl = document.getElementById("field-expiry-date");
+        if (expiryEl) expiryEl.textContent = formatDate(expiry);
       }
 
       /** Strip control chars / bidi overrides; never inject HTML (use textContent only). */
@@ -466,6 +484,7 @@
 
       var stamp = document.getElementById("footer-stamp");
       if (stamp) stamp.textContent = formatStamp(new Date());
+      applyValidityDates();
       applyQueryFields();
     })();
   </script>
