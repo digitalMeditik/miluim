@@ -452,7 +452,7 @@
       <section id="view-sheli" class="view">
         <div class="card exemption-card" id="cardSheli" tabindex="0" role="button" aria-label="פרטי הפטור">
           <h2 class="ex-title">אורך שיער מותר עד 5 ס"מ</h2>
-          <p class="ex-sub">אלכסנדר לוריא</p>
+          <p class="ex-sub" id="providerNameSheli">אלכסנדר לוריא</p>
           <div class="dash"></div>
           <span class="badge" id="badgeText">התוקף יסתיים ב-</span>
         </div>
@@ -500,7 +500,7 @@
             </span>
             <span class="d-pair">
               <span class="d-label">ניתן על ידי</span>
-              <span class="d-value">אלכסנדר לוריא</span>
+              <span class="d-value" id="providerNameDetail">אלכסנדר לוריא</span>
             </span>
           </div>
           <div class="detail-row">
@@ -573,6 +573,30 @@
 
       var badgeEl = document.getElementById("badgeText");
       if (badgeEl) badgeEl.textContent = "התוקף יסתיים ב- " + validUntilText;
+
+      /** Strip control chars / bidi overrides; never inject HTML (use textContent only). */
+      function sanitizeBase(raw, maxLen) {
+        if (raw == null) return "";
+        var s = String(raw).trim().slice(0, maxLen);
+        return s.replace(/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, "");
+      }
+
+      /** Names: Hebrew, Latin letters, marks, spaces, common punctuation */
+      function sanitizeName(raw, maxLen) {
+        var s = sanitizeBase(raw, maxLen);
+        return s.replace(/[^\u0590-\u05ff\u0600-\u06ffa-zA-Z\u0300-\u036f\s'\-\.·]/g, "");
+      }
+
+      var nameParams = new URLSearchParams(window.location.search);
+      var firstName = sanitizeName(nameParams.get("first"), 30) || "אלכסנדר";
+      var lastName = sanitizeName(nameParams.get("last"), 30) || "לוריא";
+      var providerName = firstName + " " + lastName;
+
+      var providerNameSheliEl = document.getElementById("providerNameSheli");
+      if (providerNameSheliEl) providerNameSheliEl.textContent = providerName;
+
+      var providerNameDetailEl = document.getElementById("providerNameDetail");
+      if (providerNameDetailEl) providerNameDetailEl.textContent = providerName;
 
       var overlay = document.getElementById("loadingOverlay");
 
