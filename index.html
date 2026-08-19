@@ -50,6 +50,18 @@
       min-height: max(780px, calc(100dvh - 12px));
       overflow: hidden;
       position: relative;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+      }
+
+      .certificate {
+        max-width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
       background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 55%);
     }
 
